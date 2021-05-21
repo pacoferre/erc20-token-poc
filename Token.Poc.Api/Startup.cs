@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 using Token.Poc.Api.Services;
 
 namespace Token.Poc.Api
@@ -19,8 +20,8 @@ namespace Token.Poc.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMemoryCache(); 
-            
+            services.AddMemoryCache();
+
             services.AddControllers();
 
             services.AddSwaggerGen();
@@ -43,7 +44,7 @@ namespace Token.Poc.Api
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ERC20 Token Info V1");
             });
             app.UseRouting();
 
@@ -52,6 +53,10 @@ namespace Token.Poc.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallback(context => {
+                    context.Response.Redirect("/swagger");
+                    return Task.CompletedTask;
+                });
             });
         }
     }

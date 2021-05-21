@@ -26,11 +26,16 @@ namespace Token.Poc.Api.Controllers
 
         [HttpGet]
         [Route("/api/{erc20Address}/{tokenHolderAddress}")]
-        public async Task<GetBalanceDto> Get(string erc20Address, string tokenHolderAddress)
+        public async Task<GetBalanceDto> GetBalance(string erc20Address, string tokenHolderAddress)
         {
+            var balance = (await _service.GetBalance(erc20Address, tokenHolderAddress)).ToString().Replace(",", ".");
+            var parts = balance.Split('.');
+
+            balance = Int64.Parse(parts[0]).ToString("#,##0") + '.' + parts[1];
+
             return new GetBalanceDto
             {
-                Balance = (await _service.GetBalance(erc20Address, tokenHolderAddress)).ToString().Replace(",", ".")
+                Balance = balance
             };
         }
     }
