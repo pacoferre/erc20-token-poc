@@ -31,7 +31,10 @@ namespace Token.Poc.Api.Controllers
             var balance = (await _service.GetBalance(erc20Address, tokenHolderAddress)).ToString().Replace(",", ".");
             var parts = balance.Split('.');
 
-            balance = Int64.Parse(parts[0]).ToString("#,##0") + '.' + parts[1];
+            if (parts.Length > 1)
+            {
+                balance = Int64.Parse(parts[0]).ToString("#,##0") + '.' + parts[1];
+            }
 
             return new GetBalanceDto
             {
